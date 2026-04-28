@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" href="favicon.ico" type="x-icon/image" />
+    <link rel="stylesheet" href="style.css" />
+    <title>Todo List</title>
+  </head>
+  <body>
+    <div class="app">
+      <div class="container">
+        <h1>My Todo List 📋</h1>
+        <div class="input-field">
+          <input
+            type="text"
+            placeholder="Type your task here..."
+            id="input-field"
+          />
+          <button onclick="addTask()" id="input-button">Add +</button>
+        </div>
+        <ul id="input-list"></ul>
+      </div>
+    </div>
+    <script>
+      const input = document.querySelector("#input-field");
+      const btn = document.querySelector("#input-button");
+      const list = document.querySelector("#input-list");
+
+      function addTask() {
+        const trimmed = input.value.trim();
+        if (trimmed === "") return alert("Please, type your task");
+        else {
+          const text =
+            trimmed[0].toUpperCase() + trimmed.slice(1).toLowerCase();
+
+          const li = document.createElement("li");
+          li.textContent = text;
+          list.appendChild(li);
+
+          const deleteBtn = document.createElement("span");
+          deleteBtn.textContent = "\u00d7";
+          deleteBtn.classList = li.appendChild(deleteBtn);
+
+          saveData();
+        }
+        input.value = "";
+        saveData();
+      }
+
+      input.addEventListener("keydown", function (e) {
+        if (e.key === "Enter") {
+          addTask();
+        }
+      });
+
+      list.addEventListener(
+        "click",
+        function (e) {
+          if (e.target.tagName === "LI") {
+            e.target.classList.toggle("checked");
+            saveData();
+          } else if (e.target.tagName === "SPAN") {
+            e.target.parentElement.remove();
+            saveData();
+          }
+        },
+        false,
+      );
+
+      function saveData() {
+        localStorage.setItem("tasks", list.innerHTML);
+      }
+
+      function loadData() {
+        list.innerHTML = localStorage.getItem("tasks");
+      }
+      loadData();
+    </script>
+  </body>
+</html>
